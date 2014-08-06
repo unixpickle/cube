@@ -1,8 +1,8 @@
 # Abstract
 
-The Rubik's Cube is a well-known puzzle. However, it is not the only twisty puzzle in its category. The Rubik's cube is simply a 3x3x3 cuboid&nbsp;a 6-sided twisty puzzle with stickers of 6 different colors. Other cubic cuboids are manufactured and sold in the U.S. and in other countries. While the 3x3x3 is still the most popular of these cuboids, the 2x2x2 through 7x7x7 are common as well.
+The Rubik's Cube is a well-known puzzle. However, it is not the only twisty puzzle in its category. The Rubik's cube is simply a 3x3x3 cuboid&ndash;a 6-sided twisty puzzle with stickers of 6 different colors. Other cubic cuboids are manufactured and sold in the U.S. and in other countries. While the 3x3x3 is still the most popular of these cuboids, the 2x2x2 through 7x7x7 are common as well.
 
-This API provides a way for a program to input, manipulate, and output cubic cuboids. This can be used to generate scrambles, compute solutions, and process other information about positions on cubic cuboids.
+This API provides a way for a program to read, manipulate, and output cubic cuboids. It can be used to generate scrambles, compute solutions, and process other information about positions on cubic cuboids.
 
 # Usage
 

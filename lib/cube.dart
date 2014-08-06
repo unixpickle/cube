@@ -1,5 +1,5 @@
 /**
- * A library for computational manipulation of the Rubik's cube or cubes of
+ * A library for computational manipulation of the Rubik's Cube or cubes of
  * other sizes.
  */
 library cube;
