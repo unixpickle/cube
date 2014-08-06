@@ -1,5 +1,10 @@
 part of cube;
 
+List<int> _identityList(int size) {
+  return new List<int>.generate(size * size * 6, (int i) => i,
+      growable: false);
+}
+
 /**
  * Represents a cube permutation. This could be a face turn, an algorithm, or
  * the effect of any cube application.
@@ -19,34 +24,26 @@ class StickerPermutation {
   
   /**
    * Create a new [StickerPermutation] given a side length [size] and a
-   * permutation [map]. The length of [map] must equal [size] * 6.
+   * permutation [map]. The length of [map] must be 6 * [size] ^ 2.
    */
   StickerPermutation(this.size, this.map) {
     assert(map.length == size * size * 6);
   }
   
   /**
-   * Create an identity [StickerPermutation] of size [size].
+   * Create an identity [StickerPermutation] of size [s].
    */
-  StickerPermutation.identity(this.size) : map = <int>[] {
-    for (int i = 0; i < size * size * 6; ++i) {
-      map.add(i);
-    }
-  }
+  StickerPermutation.identity(int s) : size = s, map = _identityList(s);
   
   /**
    * Create a [StickerPermutation] that acts as a clockwise quarter turn on a
-   * [face] of a cube of a given [size]. The [face] index starts at 0 and is
-   * ordered as follows: F, B, U, D, R, L.
+   * [face] of a cube of size [s]. The [face] index starts at 0 and is ordered
+   * as follows: F, B, U, D, R, L.
    */
-  StickerPermutation.faceTurn(this.size, int face) : map = <int>[] {
+  StickerPermutation.faceTurn(int s, int face) : size = s,
+      map = _identityList(s) {
     assert(face >= 0 && face < 6);
     int faceSize = size * size;
-    
-    // start off with an identity permutation
-    for (int i = 0; i < faceSize * 6; ++i) {
-      map.add(i);
-    }
     
     // permute the surface of the face
     int start = faceSize * face;
@@ -77,7 +74,7 @@ class StickerPermutation {
       case 4:
         _permuteSlice(0, size - 1, 3);
         break;
-      case 4:
+      case 5:
         _permuteSlice(0, 0, 1);
         break;
     }
@@ -102,17 +99,39 @@ class StickerPermutation {
    * [offset] of 2, while an `l` turn would have an [axis] of 0 and an [offset]
    * of 1.
    */
-  StickerPermutation.slice(this.size, int axis, int offset) : map = <int>[] {
+  StickerPermutation.slice(int s, int axis, int offset) : size = s,
+      map = _identityList(s) {
     assert(offset > 0 && offset < size - 1);
     assert(axis >= 0 && axis < 3);
-
-    // start off with an identity permutation
-    for (int i = 0; i < size * size * 6; ++i) {
-      map.add(i);
-    }
     
     // permute the slice
     _permuteSlice(axis, offset, 1);
+  }
+  
+  StickerPermutation applyToPermutation(StickerPermutation perm) {
+    assert(perm.size == size);
+    List<int> resMap = new List<int>.filled(map.length, 0);
+    for (int i = 0; i < map.length; ++i) {
+      resMap[i] = perm.map[map[i]];
+    }
+    return new StickerPermutation(size, resMap);
+  }
+  
+  StickerState applyToState(StickerState state) {
+    assert(size == state.size);
+    List<int> resStickers = new List<int>(map.length);
+    for (int i = 0; i < map.length; ++i) {
+      resStickers[i] = state.stickers[map[i]];
+    }
+    return new StickerState.raw(size, resStickers);
+  }
+  
+  StickerState toState() {
+    List<int> resStickers = new List<int>(map.length);
+    for (int i = 0; i < map.length; ++i) {
+      resStickers[i] = map[i] ~/ (size * size);
+    }
+    return new StickerState.raw(size, resStickers);
   }
   
   void _permuteSlice(int axis, int offset, int count) {
@@ -145,7 +164,7 @@ class StickerPermutation {
       }
       // down face
       for (int i = 0; i < size; ++i) {
-        result.add(3 * faceCount + i * size + offset);
+        result.add(faceCount * 3 + i * size + offset);
       }
       // back face
       for (int i = size - 1; i >= 0; --i) {
@@ -187,7 +206,7 @@ class StickerPermutation {
       }
       // down face
       for (int i = size - 1; i >= 0; --i) {
-        result.add(faceCount * 3 + i + (size - offset - 1));
+        result.add(faceCount * 3 + i + (size - offset - 1) * size);
       }
       // left face
       for (int i = size - 1; i >= 0; --i) {

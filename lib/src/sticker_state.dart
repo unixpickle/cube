@@ -1,5 +1,10 @@
 part of cube;
 
+List<int> _stickerIdentity(int size) {
+  return new List<int>.generate(size * size * 6, (int i) => i ~/ (size * size),
+      growable: false);
+}
+
 /**
  * Represents the visual state of a cube. This is a raw map of stickers rather
  * than a permutation.
@@ -57,9 +62,9 @@ class StickerState {
    * Create a new solved cube of side length [s].
    */
   StickerState.identity(int s) : size = s, faceCount = s * s,
-      stickers = <int>[] {
+      stickers = _stickerIdentity(s) {
     for (int i = 0; i < 6; ++i) {
-      for (int j = 0; j < size * size; ++j) {
+      for (int j = 0; j < faceCount; ++j) {
         stickers.add(i);
       }
     }
@@ -69,7 +74,15 @@ class StickerState {
    * Duplicate a [state].
    */
   StickerState.copy(StickerState state) : faceCount = state.faceCount,
-      size = state.size, stickers = new List.from(state.stickers);
+      size = state.size, stickers = new List.from(state.stickers,
+          growable: false);
+  
+  /**
+   * Create a [StickerState] from a raw list of stickers.
+   */
+  StickerState.raw(int s, this.stickers) : size = s, faceCount = s * s {
+    assert(faceCount * 6 == stickers.length);
+  }
   
   /**
    * Convert this [StickerState] to a human-readable string. The string includes
