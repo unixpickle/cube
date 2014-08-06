@@ -36,27 +36,27 @@ class StickerState {
   /**
    * This state's back face.
    */
-  Face get back => new Face._(size, stickers, size * size);
+  Face get back => new Face._(size, stickers, faceCount);
   
   /**
    * This state's top face.
    */
-  Face get top => new Face._(size, stickers, 18);
+  Face get top => new Face._(size, stickers, faceCount * 2);
   
   /**
    * This state's bottom face.
    */
-  Face get bottom => new Face._(size, stickers, 27);
+  Face get bottom => new Face._(size, stickers, faceCount * 3);
   
   /**
    * This state's right face.
    */
-  Face get right => new Face._(size, stickers, 36);
+  Face get right => new Face._(size, stickers, faceCount * 4);
   
   /**
    * This state's left face.
    */
-  Face get left => new Face._(size, stickers, 45);
+  Face get left => new Face._(size, stickers, faceCount * 5);
   
   /**
    * Create a new solved cube of side length [s].
