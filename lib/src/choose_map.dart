@@ -32,8 +32,8 @@ int _choose(int a, int b) {
  * N elements, N choose M is the number of subsets of S that contain M elements.
  * 
  * The choose operator is very useful for cube theory. For instance, take the
- * 3x3x3 with 12 edges. The number of cases with four disoriented edges can be
- * computed as 12 choose 4.
+ * 3x3x3 with 12 edges. The number of EO cases with four disoriented edges can
+ * be computed as 12 choose 4.
  * 
  * When encoding certain heuristics, it can be beneficial to perfectly hash a
  * subset of a larger set. For example, an edge orientation case could be
