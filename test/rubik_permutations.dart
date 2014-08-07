@@ -6,25 +6,25 @@ void main() {
 }
 
 void test3x3x3() {
-  var fMove = new StickerPermutation.faceTurn(3, 0);
-  var bMove = new StickerPermutation.faceTurn(3, 1);
-  var uMove = new StickerPermutation.faceTurn(3, 2);
-  var dMove = new StickerPermutation.faceTurn(3, 3);
-  var rMove = new StickerPermutation.faceTurn(3, 4);
-  var lMove = new StickerPermutation.faceTurn(3, 5);
-  var mMove = new StickerPermutation.slice(3, 0, 1);
-  var eMove = new StickerPermutation.slice(3, 1, 1);
-  var sMove = new StickerPermutation.slice(3, 2, 1);
+  var fMove = new StickerPerm.faceTurn(3, 0);
+  var bMove = new StickerPerm.faceTurn(3, 1);
+  var uMove = new StickerPerm.faceTurn(3, 2);
+  var dMove = new StickerPerm.faceTurn(3, 3);
+  var rMove = new StickerPerm.faceTurn(3, 4);
+  var lMove = new StickerPerm.faceTurn(3, 5);
+  var mMove = new StickerPerm.slice(3, 0, 1);
+  var eMove = new StickerPerm.slice(3, 1, 1);
+  var sMove = new StickerPerm.slice(3, 2, 1);
   
   // algorithm: F D B R M R U E L D F B S R U M
   // (tested on an actual Rubik's cube and entered in)
   
-  List<StickerPermutation> algorithm = [fMove, dMove, bMove, rMove, mMove,
+  List<StickerPerm> algorithm = [fMove, dMove, bMove, rMove, mMove,
                                         rMove, uMove, eMove, lMove, dMove,
                                         fMove, bMove, sMove, rMove, uMove,
                                         mMove];
-  StickerPermutation algoPerm = new StickerPermutation.identity(3);
-  for (StickerPermutation move in algorithm) {
+  StickerPerm algoPerm = new StickerPerm.identity(3);
+  for (StickerPerm move in algorithm) {
     algoPerm = move.applyToPermutation(algoPerm);
   }
   StickerState result = algoPerm.toState();

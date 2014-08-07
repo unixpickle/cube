@@ -9,10 +9,10 @@ List<int> _identityList(int size) {
  * Represents a cube permutation. This could be a face turn, an algorithm, or
  * the effect of any cube application.
  */
-class StickerPermutation {
+class StickerPerm {
   /**
    * The side length that a [StickerState] must have in order to perform this
-   * [StickerPermutation].
+   * [StickerPerm].
    */
   final int size;
   
@@ -23,24 +23,24 @@ class StickerPermutation {
   final List<int> map;
   
   /**
-   * Create a new [StickerPermutation] given a side length [size] and a
+   * Create a new [StickerPerm] given a side length [size] and a
    * permutation [map]. The length of [map] must be 6 * [size] ^ 2.
    */
-  StickerPermutation(this.size, this.map) {
+  StickerPerm(this.size, this.map) {
     assert(map.length == size * size * 6);
   }
   
   /**
-   * Create an identity [StickerPermutation] of size [s].
+   * Create an identity [StickerPerm] of size [s].
    */
-  StickerPermutation.identity(int s) : size = s, map = _identityList(s);
+  StickerPerm.identity(int s) : size = s, map = _identityList(s);
   
   /**
-   * Create a [StickerPermutation] that acts as a clockwise quarter turn on a
+   * Create a [StickerPerm] that acts as a clockwise quarter turn on a
    * [face] of a cube of size [s]. The [face] index starts at 0 and is ordered
    * as follows: F, B, U, D, R, L.
    */
-  StickerPermutation.faceTurn(int s, int face) : size = s,
+  StickerPerm.faceTurn(int s, int face) : size = s,
       map = _identityList(s) {
     assert(face >= 0 && face < 6);
     int faceSize = size * size;
@@ -81,7 +81,7 @@ class StickerPermutation {
   }
   
   /**
-   * Create a [StickerPermutation] that acts as a slice on a cube of a given
+   * Create a [StickerPerm] that acts as a slice on a cube of a given
    * [size].
    * 
    * The [axis] argument specifies which slice to perform. The axes are ordered
@@ -99,7 +99,7 @@ class StickerPermutation {
    * [offset] of 2, while an `l` turn would have an [axis] of 0 and an [offset]
    * of 1.
    */
-  StickerPermutation.slice(int s, int axis, int offset) : size = s,
+  StickerPerm.slice(int s, int axis, int offset) : size = s,
       map = _identityList(s) {
     assert(offset > 0 && offset < size - 1);
     assert(axis >= 0 && axis < 3);
@@ -108,13 +108,13 @@ class StickerPermutation {
     _permuteSlice(axis, offset, 1);
   }
   
-  StickerPermutation applyToPermutation(StickerPermutation perm) {
+  StickerPerm applyToPermutation(StickerPerm perm) {
     assert(perm.size == size);
     List<int> resMap = new List<int>.filled(map.length, 0);
     for (int i = 0; i < map.length; ++i) {
       resMap[i] = perm.map[map[i]];
     }
-    return new StickerPermutation(size, resMap);
+    return new StickerPerm(size, resMap);
   }
   
   StickerState applyToState(StickerState state) {

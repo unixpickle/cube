@@ -6,4 +6,5 @@ library cube;
 
 part 'src/sticker_state.dart';
 part 'src/face.dart';
-part 'src/sticker_permutation.dart';
+part 'src/sticker_perm.dart';
+part 'src/choose_map.dart';
