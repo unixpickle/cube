@@ -11,3 +11,8 @@ part 'src/choose_map.dart';
 part 'src/edges.dart';
 part 'src/sticker_edges.dart';
 part 'src/heuristic_3x3x3.dart';
+part 'src/wca_move.dart';
+part 'src/wca_algorithm.dart';
+part 'src/sticker_move.dart';
+part 'src/sticker_algorithm.dart';
+part 'src/notation_error.dart';

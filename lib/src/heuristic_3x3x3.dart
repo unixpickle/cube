@@ -1,12 +1,30 @@
 part of cube;
 
+/**
+ * This class provides heuristic information about a 3x3x3 cuboid.
+ */
 class Heuristic3x3x3 {
+  /**
+   * The edges of the 3x3x3 cubiod.
+   */
   final Edges edges;
   
+  /**
+   * Create a [Heuristic3x3x3] from an edge map.
+   */
   Heuristic3x3x3(this.edges) {
     assert(edges.size == 3);
   }
   
+  /**
+   * Generates a unique hash from 0 to 2047 (inclusive) which represents the
+   * edge orientation case on the cube.
+   * 
+   * The [axis] argument specifiecs the edge orientation scheme. In the desired
+   * scheme, an edge is good if it can be solved without turning the two faces
+   * perpendicular to [axis]. The axis is identified by a number 0 through 2 for
+   * the axis x, y, and z respectively. The ZZ method uses an [axis] of 2.
+   */
   int hashEO(int axis) {
     int res = 0;
     for (int i = 0; i < 11; ++i) {
@@ -18,6 +36,21 @@ class Heuristic3x3x3 {
     return res;
   }
   
+  /**
+   * Returns the number of moves required to orient every edge with respect to
+   * an [axis].
+   */
+  int edgeOrientationMoveCount(int axis) {
+    int hash = hashEO(axis);
+    assert(axis >= 0 && axis < 3);
+    if (axis == 0) return xEOHeuristic[hash];
+    else if (axis == 1) return yEOHeuristic[hash];
+    else return zEOHeuristic[hash];
+  }
+  
+  /**
+   * Data used by [edgeOrientationMoveCount].
+   */
   static final List<int> xEOHeuristic =
       [7, 6, 7, 6, 6, 6, 6, 5, 6, 6, 6, 5, 6, 5, 6, 5, 6, 6, 6, 6, 
        6, 5, 5, 5, 7, 5, 5, 6, 6, 5, 5, 6, 7, 6, 7, 5, 6, 4, 5, 5, 
@@ -123,6 +156,9 @@ class Heuristic3x3x3 {
        4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 4, 5, 4, 4, 3, 4, 5, 3, 3, 
        4, 3, 4, 3, 3, 4, 3, 0];
   
+  /**
+   * Data used by [edgeOrientationMoveCount].
+   */
   static final List<int> yEOHeuristic =
       [7, 6, 6, 6, 7, 6, 6, 6, 6, 6, 6, 5, 6, 5, 5, 5, 6, 7, 6, 6, 
        6, 5, 5, 5, 6, 5, 5, 5, 6, 6, 5, 6, 6, 7, 6, 6, 6, 6, 6, 6, 
@@ -228,6 +264,9 @@ class Heuristic3x3x3 {
        4, 4, 4, 3, 4, 4, 4, 3, 3, 3, 4, 4, 5, 4, 4, 3, 4, 4, 3, 3, 
        4, 3, 5, 4, 3, 3, 3, 0];
   
+  /**
+   * Data used by [edgeOrientationMoveCount].
+   */
   static final List<int> zEOHeuristic =
       [7, 6, 6, 7, 6, 7, 7, 5, 6, 7, 7, 5, 7, 5, 5, 6, 6, 6, 6, 5, 
        6, 4, 4, 5, 6, 4, 4, 5, 5, 5, 5, 5, 6, 6, 6, 5, 6, 4, 5, 5, 

@@ -134,6 +134,14 @@ class StickerPerm {
     return new StickerState.raw(size, resStickers);
   }
   
+  StickerPerm repeated(int count) {
+    StickerPerm res = new StickerPerm.identity(size);
+    for (int i = 0; i < count; ++i) {
+      res = this.applyToPermutation(res);
+    }
+    return res;
+  }
+  
   void _permuteSlice(int axis, int offset, int count) {
     // read the slice, permute it, and write it back
     List<int> slice = _readSlice(axis, offset);
