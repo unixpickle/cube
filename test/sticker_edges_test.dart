@@ -37,6 +37,7 @@ void testRandom3x3x3() {
   List<List<int>> stickers = [[-1, 0, 3], [2, -1, 0], [-1, 0, 5], [1, -1, 5],
                               [3, 1, -1], [3, 5, -1], [-1, 1, 4], [3, -1, 4],
                               [-1, 2, 1], [4, -1, 0], [2, 5, -1], [2, 4, -1]];
+  List<List<int>> pieces = [2, 0, 3, 9, 8, 10, 7, 11, 6, 1, 4, 5];
   StickerEdges edges = new StickerEdges(result);
   for (int i = 0; i < 12; ++i) {
     List<int> testStickers = edges.edgeColors(i, 0);
@@ -48,7 +49,12 @@ void testRandom3x3x3() {
       }
     }
   }
-  
+  for (int i = 0; i < 12; ++i) {
+    if (edges.readEdge(i, 0) != pieces[i]) {
+      print('invalid edge at dedge $i');
+      exit(1);
+    }
+  }
   for (int i = 0; i < 3; ++i) {
     List<bool> right = axesInfo[i];
     List<bool> tested = edges.orientationsForAxis(i);
