@@ -14,8 +14,67 @@ class StickerEdges extends Edges {
   StickerEdges(this.state);
   
   bool isOriented(int dedgeSlot, int edgeSlot, int axis) {
+    assert(axis >= 0 && axis < 3);
     List<int> colors = edgeColors(dedgeSlot, edgeSlot);
-    // TODO: here, hardcode the EO rules for every color scheme
+        
+    // use the ZZ edge orientation rules to determine if it's good or bad
+    if (axis == 0) {
+      // look at the E slice and use the right or top color to determine if it's
+      // good or bad
+      bool isSliceEdge = (colors.contains(0) || colors.contains(1)) &&
+          (colors.contains(4) || colors.contains(5));
+      bool isSliceSlot = [1, 3, 7, 9].contains(dedgeSlot);
+      if (isSliceEdge) {
+        if (isSliceSlot) {
+          return [4, 5].contains(colors[0]);
+        } else {
+          return [4, 5].contains(colors[1]);
+        }
+      } else {
+        if (isSliceSlot) {
+          return [2, 3].contains(colors[0]);
+        } else {
+          return [2, 3].contains(colors[1]);
+        }
+      }
+    } else if (axis == 1) {
+      // look at the S slice and use the front or top color to determine if it's
+      // good or bad
+      bool isSliceEdge = (colors.contains(2) || colors.contains(3)) &&
+          (colors.contains(4) || colors.contains(5));
+      bool isSliceSlot = [4, 5, 10, 11].contains(dedgeSlot);
+      if (isSliceEdge) {
+        if (isSliceSlot) {
+          return [2, 3].contains(colors[1]);
+        } else {
+          return [2, 3].contains(colors[2]);
+        }
+      } else {
+        if (isSliceSlot) {
+          return [0, 1].contains(colors[1]);
+        } else {
+          return [0, 1].contains(colors[2]);
+        }
+      }
+    } else {
+      // standard ZZ rules; using E slice with front or top color
+      bool isSliceEdge = (colors.contains(0) || colors.contains(1)) &&
+          (colors.contains(4) || colors.contains(5));
+      bool isSliceSlot = [1, 3, 7, 9].contains(dedgeSlot);
+      if (isSliceEdge) {
+        if (isSliceSlot) {
+          return [0, 1].contains(colors[2]);
+        } else {
+          return [0, 1].contains(colors[1]);
+        }
+      } else {
+        if (isSliceSlot) {
+          return [2, 3].contains(colors[2]);
+        } else {
+          return [2, 3].contains(colors[1]);
+        }
+      }
+    }
   }
   
   int readEdge(int dedgeSlot, int edgeSlot) {
@@ -45,39 +104,39 @@ class StickerEdges extends Edges {
         return [-1, state.top.getSticker(edgeSlot + 1, size - 1),
                 state.front.getSticker(edgeSlot + 1, 0)];
       case 1: // FR
-        return [state.right.getSticker(0, size - edgeSlot - 1), -1,
-                state.front.getSticker(size - 1, size - edgeSlot - 1)];
+        return [state.right.getSticker(0, size - edgeSlot - 2), -1,
+                state.front.getSticker(size - 1, size - edgeSlot - 2)];
       case 2: // FD
         return [-1, state.bottom.getSticker(edgeSlot + 1, 0),
                 state.front.getSticker(edgeSlot + 1, size - 1)];
       case 3: // FL
-        return [state.left.getSticker(size - 1, size - edgeSlot - 1), -1,
-                state.front.getSticker(0, size - edgeSlot - 1)];
+        return [state.left.getSticker(size - 1, size - edgeSlot - 2), -1,
+                state.front.getSticker(0, size - edgeSlot - 2)];
       case 4: // UL
         return [state.left.getSticker(edgeSlot + 1, 0),
                 state.top.getSticker(0, edgeSlot + 1), -1];
       case 5: // UR
-        return [state.right.getSticker(size - edgeSlot - 1, 0),
+        return [state.right.getSticker(size - edgeSlot - 2, 0),
                 state.top.getSticker(size - 1, edgeSlot + 1), -1];
       case 6: // BU
         return [-1, state.top.getSticker(edgeSlot + 1, 0),
-                state.back.getSticker(size - edgeSlot - 1, 0)];
+                state.back.getSticker(size - edgeSlot - 2, 0)];
       case 7: // BR
-        return [state.right.getSticker(size - 1, size - edgeSlot - 1),
-                -1, state.back.getSticker(0, size - edgeSlot - 1)];
+        return [state.right.getSticker(size - 1, size - edgeSlot - 2),
+                -1, state.back.getSticker(0, size - edgeSlot - 2)];
       case 8: // BD
         return [-1, state.bottom.getSticker(edgeSlot + 1, size - 1),
-                state.back.getSticker(size - edgeSlot - 1, size - 1)];
+                state.back.getSticker(size - edgeSlot - 2, size - 1)];
       case 9: // BL
-        return [state.left.getSticker(0, size - edgeSlot - 1), -1,
-                state.back.getSticker(size - 1, size - edgeSlot - 1)];
+        return [state.left.getSticker(0, size - edgeSlot - 2), -1,
+                state.back.getSticker(size - 1, size - edgeSlot - 2)];
       case 10: // DL
         return [state.left.getSticker(edgeSlot + 1, size - 1),
-                state.bottom.getSticker(0, size - edgeSlot - 1),
+                state.bottom.getSticker(0, size - edgeSlot - 2),
                 -1];
       case 11: // DR
-        return [state.right.getSticker(size - edgeSlot - 1, size - 1),
-                state.bottom.getSticker(size - 1, size - edgeSlot - 1),
+        return [state.right.getSticker(size - edgeSlot - 2, size - 1),
+                state.bottom.getSticker(size - 1, size - edgeSlot - 2),
                 -1];
     }
     throw new RangeError.range(dedgeSlot, 0, 11);
