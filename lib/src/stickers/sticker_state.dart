@@ -9,7 +9,7 @@ List<int> _stickerIdentity(int size) {
  * Represents the visual state of a cube. This is a raw map of stickers rather
  * than a permutation.
  */
-class StickerState {
+class StickerState extends CubeState {
   /**
    * The side length of this cube. For example, a 4x4x4 would have a [size] of
    * 4.
@@ -57,6 +57,11 @@ class StickerState {
    * This state's left face.
    */
   Face get left => new Face._(size, stickers, faceCount * 5);
+  
+  /**
+   * This state's edges.
+   */
+  Edges get edges => new StickerEdges(this);
   
   /**
    * Create a new solved cube of side length [s].

@@ -60,14 +60,14 @@ StickerPerm _wcaMoveStickerPerm(int size, WcaMove move) {
  * inefficient. It is recommended that you translate a standard basis to a list
  * of [StickerMove]s early on in your program and reuse it.
  */
-class StickerMove {
+class StickerMove extends Move<StickerState> {
   final int size;
-  final String moveName;
+  final String name;
   final StickerPerm permutation;
   
   StickerMove.fromWca(int theSize, WcaMove move) : size = theSize,
-      moveName = move.toString(),
+      name = move.toString(),
       permutation = _wcaMoveStickerPerm(theSize, move);
   
-  String toString() => moveName;
+  String toString() => name;
 }

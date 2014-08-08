@@ -9,7 +9,7 @@ List<int> _identityList(int size) {
  * Represents a cube permutation. This could be a face turn, an algorithm, or
  * the effect of any cube application.
  */
-class StickerPerm {
+class StickerPerm extends Permutation {
   /**
    * The side length that a [StickerState] must have in order to perform this
    * [StickerPerm].

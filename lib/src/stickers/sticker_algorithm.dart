@@ -3,14 +3,20 @@ part of cube;
 /**
  * A list of [StickerMove] objects.
  */
-class StickerAlgorithm {
-  int size;
-  final List<StickerMove> moves;
+class StickerAlgorithm extends Algorithm<StickerState> {
+  StickerAlgorithm(int theSize) : super(theSize);
   
-  StickerAlgorithm.fromWca(this.size, WcaAlgorithm algo) : moves = [] {
+  StickerAlgorithm.fromList(int theSize, List<Move<StickerState>> theMoves) :
+      super.fromList(theSize, theMoves);
+  
+  StickerAlgorithm.fromWca(int theSize, WcaAlgorithm algo) : super(theSize) {
     for (WcaMove move in algo.moves) {
       moves.add(new StickerMove.fromWca(size, move));
     }
+  }
+  
+  StickerAlgorithm generate(List<Move<StickerState>> moves) {
+    return new StickerAlgorithm.fromList(size, moves);
   }
   
   StickerPerm toPermutation() {
@@ -24,6 +30,4 @@ class StickerAlgorithm {
   StickerState toState() {
     return toPermutation().toState();
   }
-  
-  String toString() => moves.join(' ');
 }

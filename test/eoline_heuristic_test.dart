@@ -8,11 +8,22 @@ class SearchState {
   SearchState(this.depth, this.state);
   
   int hashEO(int axis) {
-    return new Heuristic3x3x3(new StickerEdges(state)).hashEO(axis);
+    return new Heuristic3x3x3(state.edges).hashEO(axis);
+  }
+  
+  int hashEOAndEdge(int axis, int edge) {
+    return new Heuristic3x3x3(state.edges).hashEOAndEdge(axis, edge);
+  }
+  
+  int hashEOLine() {
+    return new Heuristic3x3x3(state.edges).hashEOLineEdges();
   }
 }
 
 void main() {
+  List<int> values = generateBigHeuristic(2);
+  print('$values');
+  
   List<int> xHeuristic = generateHeuristic(0);
   for (int i = 0; i < 2048; ++i) {
     if (xHeuristic[i] != Heuristic3x3x3.xEOHeuristic[i]) {
@@ -39,6 +50,15 @@ void main() {
     }
   }
   print('Z EO heuristic passed');
+  
+  List<int> edgeHeuristic = generateLineHeuristic();
+  for (int i = 0; i < 528; ++i) {
+    if (edgeHeuristic[i] != Heuristic3x3x3.eoLineHeuristic[i]) {
+      print('mismatching EOLine heuristic at index $i');
+      exit(1);
+    }
+  }
+  print('line-edge heuristic passed');
 }
 
 List<StickerPerm> generateMoves() {
@@ -91,5 +111,67 @@ List<int> generateHeuristic(int axis) {
     assert(result[i] != -1);
   }
   
+  return result;
+}
+
+List<int> generateLineHeuristic() {
+  List<int> result = new List<int>.filled(528, -1);
+  List<StickerPerm> moves = generateMoves();
+  List<SearchState> nodes = [new SearchState(0, new StickerState.identity(3))];
+  
+  int maxDepth = 5;
+  
+  while (nodes.length != 0) {
+    SearchState node = nodes.first;
+    if (node.depth > maxDepth) {
+      break;
+    }
+    nodes.removeAt(0);
+    if (result[node.hashEOLine()] != -1) continue;
+    result[node.hashEOLine()] = node.depth;
+    
+    if (node.depth == maxDepth) continue;
+    for (StickerPerm perm in moves) {
+      SearchState newNode = new SearchState(node.depth + 1,
+          perm.applyToState(node.state));
+      if (result[newNode.hashEOLine()] != -1) continue;
+      nodes.add(newNode);
+    }
+  }
+  
+  for (int i = 0; i < 528; ++i) {
+    assert(result[i] != -1);
+  }
+  return result;
+}
+
+List<int> generateBigHeuristic(int edge) {
+  List<int> result = new List<int>.filled(24576, -1);
+  List<StickerPerm> moves = generateMoves();
+  List<SearchState> nodes = [new SearchState(0, new StickerState.identity(3))];
+  
+  int maxDepth = 9;
+  
+  while (nodes.length != 0) {
+    SearchState node = nodes.first;
+    if (node.depth > maxDepth) {
+      break;
+    }
+    nodes.removeAt(0);
+    if (result[node.hashEOAndEdge(2, edge)] != -1) continue;
+    result[node.hashEOAndEdge(2, edge)] = node.depth;
+    
+    if (node.depth == maxDepth) continue;
+    for (StickerPerm perm in moves) {
+      SearchState newNode = new SearchState(node.depth + 1,
+          perm.applyToState(node.state));
+      if (result[newNode.hashEOAndEdge(2, edge)] != -1) continue;
+      nodes.add(newNode);
+    }
+  }
+  
+  for (int i = 0; i < 24576; ++i) {
+    assert(result[i] != -1);
+  }
   return result;
 }
