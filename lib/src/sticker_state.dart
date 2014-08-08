@@ -62,13 +62,7 @@ class StickerState {
    * Create a new solved cube of side length [s].
    */
   StickerState.identity(int s) : size = s, faceCount = s * s,
-      stickers = _stickerIdentity(s) {
-    for (int i = 0; i < 6; ++i) {
-      for (int j = 0; j < faceCount; ++j) {
-        stickers.add(i);
-      }
-    }
-  }
+      stickers = _stickerIdentity(s);
   
   /**
    * Duplicate a [state].
