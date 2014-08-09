@@ -134,6 +134,9 @@ class StickerPerm extends Permutation {
     return new StickerState.raw(size, resStickers);
   }
   
+  /**
+   * Apply this permutation to itself [count] - 1 times and return the result.
+   */
   StickerPerm repeated(int count) {
     StickerPerm res = new StickerPerm.identity(size);
     for (int i = 0; i < count; ++i) {

@@ -65,6 +65,9 @@ class StickerMove extends Move<StickerState> {
   final String name;
   final StickerPerm permutation;
   
+  /**
+   * Create a [StickerMove] from a WCA move.
+   */
   StickerMove.fromWca(int theSize, WcaMove move) : size = theSize,
       name = move.toString(),
       permutation = _wcaMoveStickerPerm(theSize, move);

@@ -1,49 +1,64 @@
 part of cube;
 
-typedef bool SolveChecker(CubeState state);
-
-class AsyncSolver<S extends CubeState> {
-  final SolveChecker _checker;
-  final SolveHeuristic _heuristicCb;
-  Solver<S> _solver;
+/**
+ * A solver which tunnels solutions through a stream. This class uses a timer
+ * to periodically resign control to your application, making it perfect for
+ * solving on the web.
+ */
+abstract class AsyncSolver<S extends CubeState> extends Solver<S> {
   StreamController<Algorithm<S>> _controller;
   DateTime _startTime;
   
+  /**
+   * A stream which sends solutions.
+   */
   Stream<Algorithm<S>> get stream => _controller.stream;
   
-  AsyncSolver(this._checker, S start, this._heuristicCb,
-      List<Move<S>> basis, int maxDepth, Algorithm<S> empty) {
-    _solver = new Solver(start, basis, maxDepth, _solveCallback,
-        _heuristic, empty);
+  /**
+   * Create an [AsyncSolver] from a state [start], a basis [basis], a maximum
+   * depth [maxDepth], and a prefix algorithm [startAlg].
+   */
+  AsyncSolver(S start, List<Move<S>> basis, int maxDepth,
+      Algorithm<S> startAlg) : super(start, basis, maxDepth, startAlg) {
     _controller = new StreamController(onListen: _onListen, onPause: _onPause,
-        onCancel: _onCancel, onResume: _onResume);
+        onCancel: _onCancel, onResume: _onResume, sync: true);
   }
   
-  void _solveCallback(CubeState state, Algorithm solution) {
-    assert(state is S);
-    assert(solution is Algorithm<S>);
-    if (_checker(state)) {
-      _controller.add(solution);
+  /**
+   * Do not call this directly. Instead, pause your subscription to [stream].
+   */
+  void pause() {
+    throw new UnsupportedError('pause an AsyncSolver through' +
+        'your stream subscription');
+  }
+  
+  /**
+   * Sends an algorithm over the stream if its state is solved. You should not
+   * call this directly.
+   */
+  void handleState(S s, Algorithm<S> a) {
+    if (isSolved(s)) {
+      _controller.add(a);
     }
     _pauseIfNeeded();
   }
   
-  int _heuristic(CubeState state) {
-    assert(state is S);
-    int res = _heuristicCb(state);
-    return res;
-  }
+  /**
+   * Implement this to verify that a state should be sent over the output
+   * stream.
+   */
+  bool isSolved(S s);
   
   void _onListen() {
     scheduleMicrotask(_startTimer);
   }
   
   void _onPause() {
-    _solver.pause();
+    super.pause();
   }
   
   void _onCancel() {
-    _solver.pause();
+    super.pause();
     _controller.close();
   }
   
@@ -54,7 +69,7 @@ class AsyncSolver<S extends CubeState> {
   void _pauseIfNeeded() {
     int millis = new DateTime.now().difference(_startTime).inMilliseconds;
     if (millis >= 10) {
-      _solver.pause();
+      super.pause();
       new Future.value().then((_) => _startTimer());
     }
   }
@@ -64,6 +79,6 @@ class AsyncSolver<S extends CubeState> {
       return;
     }
     _startTime = new DateTime.now();
-    _solver.run();
+    run();
   }
 }

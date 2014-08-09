@@ -14,8 +14,4 @@ The `StickerPermutation` class handles the hardest-to-implement part of the enti
 
 Here's my TODO list:
 
- * Create 4x4x4 `StickerPermutation` test
- * Create test for `Face` object
- * Create `StickerMove` class with `axis` attribute
-   * Need a `StickerMove.wcaMoves(int size)` method
  * Create `generateScramble` method

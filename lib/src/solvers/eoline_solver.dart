@@ -4,19 +4,27 @@ part of cube;
  * Solve the EO line optimally on a 3x3x3.
  */
 class EOLineSolver<S extends CubeState> extends AsyncSolver<S> {
-  EOLineSolver(S start, Algorithm<S> startAlgo, List<Move<S>> basis,
-      {int aMaxDepth: 9}) :
-      super(_eoChecker, start, _eoHeuristic, basis, aMaxDepth, startAlgo) {
+  final EOLineHeuristics heuristics;
+  
+  /**
+   * Create an [EOLineSolver] from a set of standard information and a set of
+   * pre-loaded indexes [heuristics].
+   */
+  EOLineSolver(S start, List<Move<S>> basis, Algorithm<S> startAlg,
+      this.heuristics, {int aMaxDepth: 9}) :
+          super(start, basis, aMaxDepth, startAlg);
+  
+  /**
+   * Heuristic function for the EO line.
+   */
+  int heuristic(S s) {
+    return heuristics.moveCount(s.edges);
   }
   
-  static int _eoHeuristic(CubeState aState) {
-    Heuristic3x3x3 heuristic = new Heuristic3x3x3(aState.edges);
-    return heuristic.eoLineFrontEdgeMoveCount();
-    /*return max(heuristic.edgeOrientationMoveCount(2),
-        heuristic.eoLineEdgeMoveCount());*/
-  }
-  
-  static bool _eoChecker(CubeState state) {
+  /**
+   * Checks if a state has the EOLine solved.
+   */
+  bool isSolved(S state) {
     Edges edges = state.edges;
     if (!edges.orientationsForAxis(2).every((x) => x == true)) {
       return false;

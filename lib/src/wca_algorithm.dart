@@ -5,8 +5,14 @@ part of cube;
  * a chain of [WcaMove] objects.
  */
 class WcaAlgorithm {
+  /**
+   * The moves in the algorithm.
+   */
   final List<WcaMove> moves;
   
+  /**
+   * Parse a WCA algorithm.
+   */
   WcaAlgorithm.fromString(String str) : moves = new List<WcaMove>() {
     List<String> comps = str.split(new RegExp(r'\s+'));
     for (String comp in comps) {
@@ -14,5 +20,8 @@ class WcaAlgorithm {
     }
   }
   
+  /**
+   * Returns a WCA-standard algorithm.
+   */
   String toString() => moves.join(' ');
 }

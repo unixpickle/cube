@@ -1,5 +1,6 @@
 import 'package:cube/cube.dart';
 import 'dart:async';
+import 'dart:io';
 
 void main() {
   String fourFlip = "M' U' M' U' M' U' M' U'";
@@ -13,5 +14,11 @@ void main() {
 }
 
 Stream<StickerAlgorithm> solveEOLine(StickerState state) {
-  return new StickerEOLineSolver(state).stream;
+  List<int> frontHeuristic = new File('packages/cube/heuristics/zzfront.bin')
+      .readAsBytesSync();
+  List<int> backHeuristic = new File('packages/cube/heuristics/zzback.bin')
+      .readAsBytesSync();
+  EOLineHeuristics heuristics = new EOLineHeuristics(frontHeuristic,
+      backHeuristic);
+  return new StickerEOLineSolver(state, heuristics).stream;
 }

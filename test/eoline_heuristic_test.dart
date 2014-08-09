@@ -8,25 +8,31 @@ class SearchState {
   SearchState(this.depth, this.state);
   
   int hashEO(int axis) {
-    return new Heuristic3x3x3(state.edges).hashEO(axis);
+    return EOLineHeuristics.hashEO(state.edges, axis);
   }
   
   int hashEOAndEdge(int axis, int edge) {
-    return new Heuristic3x3x3(state.edges).hashEOAndEdge(axis, edge);
+    return EOLineHeuristics.hashEOAndEdge(state.edges, axis, edge);
   }
   
   int hashEOLine() {
-    return new Heuristic3x3x3(state.edges).hashEOLineEdges();
+    return EOLineHeuristics.hashEOLineEdges(state.edges);
   }
 }
 
+String heuristicFilePath(String name) {
+  return 'packages/cube/heuristics/$name';
+}
+
+List<int> readHeuristic(String name) {
+  return new File(heuristicFilePath(name)).readAsBytesSync();
+}
+
 void main() {
-  List<int> values = generateBigHeuristic(2);
-  print('$values');
-  
   List<int> xHeuristic = generateHeuristic(0);
+  List<int> savedValues = readHeuristic('xeo.bin');
   for (int i = 0; i < 2048; ++i) {
-    if (xHeuristic[i] != Heuristic3x3x3.xEOHeuristic[i]) {
+    if (xHeuristic[i] != savedValues[i]) {
       print('mismatching EO heuristic for hash $i on X axis');
       exit(1);
     }
@@ -34,8 +40,9 @@ void main() {
   print('X EO heuristic passed');
   
   List<int> yHeuristic = generateHeuristic(1);
+  savedValues = readHeuristic('yeo.bin');
   for (int i = 0; i < 2048; ++i) {
-    if (yHeuristic[i] != Heuristic3x3x3.yEOHeuristic[i]) {
+    if (yHeuristic[i] != savedValues[i]) {
       print('mismatching EO heuristic for hash $i on Y axis');
       exit(1);
     }
@@ -43,8 +50,9 @@ void main() {
   print('Y EO heuristic passed');
   
   List<int> zHeuristic = generateHeuristic(2);
+  savedValues = readHeuristic('zeo.bin');
   for (int i = 0; i < 2048; ++i) {
-    if (zHeuristic[i] != Heuristic3x3x3.zEOHeuristic[i]) {
+    if (zHeuristic[i] != savedValues[i]) {
       print('mismatching EO heuristic for hash $i on Z axis');
       exit(1);
     }
@@ -52,13 +60,34 @@ void main() {
   print('Z EO heuristic passed');
   
   List<int> edgeHeuristic = generateLineHeuristic();
+  savedValues = readHeuristic('zzedges.bin');
   for (int i = 0; i < 528; ++i) {
-    if (edgeHeuristic[i] != Heuristic3x3x3.eoLineHeuristic[i]) {
+    if (edgeHeuristic[i] != savedValues[i]) {
       print('mismatching EOLine heuristic at index $i');
       exit(1);
     }
   }
   print('line-edge heuristic passed');
+  
+  List<int> values = generateBigHeuristic(8);
+  savedValues = readHeuristic('zzback.bin');
+  for (int i = 0; i < values.length; ++i) {
+    if (savedValues[i] != values[i]) {
+     print('back edge invalid $i');
+     exit(1);
+    }
+  }
+  print('back edge big EO line heuristic passed');
+  
+  values = generateBigHeuristic(2);
+  savedValues = readHeuristic('zzfront.bin');
+  for (int i = 0; i < values.length; ++i) {
+    if (savedValues[i] != values[i]) {
+     print('front edge invalid $i');
+     exit(1);
+    }
+  }
+  print('front edge big EO line heuristic passed');
 }
 
 List<StickerPerm> generateMoves() {

@@ -4,11 +4,20 @@ part of cube;
  * A list of [StickerMove] objects.
  */
 class StickerAlgorithm extends Algorithm<StickerState> {
+  /**
+   * Create an empty algorithm.
+   */
   StickerAlgorithm(int theSize) : super(theSize);
   
+  /**
+   * Create an algorithm from a list of moves.
+   */
   StickerAlgorithm.fromList(int theSize, List<Move<StickerState>> theMoves) :
       super.fromList(theSize, theMoves);
   
+  /**
+   * Create an algorithm from a WCA algorithm.
+   */
   StickerAlgorithm.fromWca(int theSize, WcaAlgorithm algo) : super(theSize) {
     for (WcaMove move in algo.moves) {
       moves.add(new StickerMove.fromWca(size, move));

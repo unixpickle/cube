@@ -15,6 +15,11 @@ abstract class WcaMove {
    */
   int get power;
   
+  /**
+   * Create a [WcaMove] subclass that corresponds to the given move.
+   * 
+   * If the move cannot be parsed, a [NotationError] is thrown.
+   */
   factory WcaMove.fromString(String s) {
     try {
       return new WcaTurn.fromString(s);
@@ -106,6 +111,9 @@ class WcaTurn implements WcaMove {
   }
 }
 
+/**
+ * A slice turn in WCA notation.
+ */
 class WcaSlice implements WcaMove {
   final int axis;
   final int power;
@@ -140,6 +148,9 @@ class WcaSlice implements WcaMove {
   }
 }
 
+/**
+ * A cube rotation in WCA notation.
+ */
 class WcaRotation implements WcaMove {
   final int axis;
   final int power;

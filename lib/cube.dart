@@ -20,13 +20,15 @@ part 'src/stickers/sticker_algorithm.dart';
 part 'src/stickers/sticker_eoline_solver.dart';
 part 'src/stickers/face.dart';
 
-part 'src/algorithm.dart';
-
-part 'src/choose_map.dart';
-part 'src/heuristic_3x3x3.dart';
-part 'src/wca_move.dart';
-part 'src/wca_algorithm.dart';
-part 'src/notation_error.dart';
 part 'src/solvers/solver.dart';
 part 'src/solvers/async_solver.dart';
 part 'src/solvers/eoline_solver.dart';
+
+part 'src/heuristics/eoline_heuristics.dart';
+
+part 'src/abstract/algorithm.dart';
+
+part 'src/choose_map.dart';
+part 'src/wca_move.dart';
+part 'src/wca_algorithm.dart';
+part 'src/notation_error.dart';

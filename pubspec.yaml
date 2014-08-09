@@ -1,2 +1,5 @@
 name: cube
-description: A pub package 
+version: 0.0.1
+author: Alex Nichol <unixpickle@gmail.com>
+description: A pub package
+homepage: https://github.com/unixpickle/cube
