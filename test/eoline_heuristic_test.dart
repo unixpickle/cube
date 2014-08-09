@@ -15,8 +15,12 @@ class SearchState {
     return EOLineHeuristics.hashEOAndEdge(state.edges, axis, edge);
   }
   
-  int hashEOLine() {
+  int hashEOLineEdges() {
     return EOLineHeuristics.hashEOLineEdges(state.edges);
+  }
+  
+  int hashEOLine() {
+    return EOLineHeuristics.hashEOLine(state.edges);
   }
 }
 
@@ -156,14 +160,14 @@ List<int> generateLineHeuristic() {
       break;
     }
     nodes.removeAt(0);
-    if (result[node.hashEOLine()] != -1) continue;
-    result[node.hashEOLine()] = node.depth;
+    if (result[node.hashEOLineEdges()] != -1) continue;
+    result[node.hashEOLineEdges()] = node.depth;
     
     if (node.depth == maxDepth) continue;
     for (StickerPerm perm in moves) {
       SearchState newNode = new SearchState(node.depth + 1,
           perm.applyToState(node.state));
-      if (result[newNode.hashEOLine()] != -1) continue;
+      if (result[newNode.hashEOLineEdges()] != -1) continue;
       nodes.add(newNode);
     }
   }
@@ -200,6 +204,40 @@ List<int> generateBigHeuristic(int edge) {
   }
   
   for (int i = 0; i < 24576; ++i) {
+    assert(result[i] != -1);
+  }
+  return result;
+}
+
+List<int> generateFullHeuristic() {
+  List<int> result = new List<int>.filled(270336, -1);
+  List<StickerPerm> moves = generateMoves();
+  List<SearchState> nodes = [new SearchState(0, new StickerState.identity(3))];
+  
+  int maxDepth = 9;
+  int count = 0;
+  while (nodes.length != 0) {
+    SearchState node = nodes.first;
+    if (node.depth > maxDepth) {
+      break;
+    }
+    nodes.removeAt(0);
+    if (result[node.hashEOLine()] != -1) continue;
+    
+    ++count;
+    if ((count % 1000) == 0) print('count is $count');
+    result[node.hashEOLine()] = node.depth;
+    
+    if (node.depth == maxDepth) continue;
+    for (StickerPerm perm in moves) {
+      SearchState newNode = new SearchState(node.depth + 1,
+          perm.applyToState(node.state));
+      if (result[newNode.hashEOLine()] != -1) continue;
+      nodes.add(newNode);
+    }
+  }
+  
+  for (int i = 0; i < 270336; ++i) {
     assert(result[i] != -1);
   }
   return result;

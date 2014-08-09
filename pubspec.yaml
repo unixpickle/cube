@@ -1,5 +1,5 @@
 name: cube
-version: 0.0.1
+version: 0.0.2
 author: Alex Nichol <unixpickle@gmail.com>
-description: A pub package
+description: Solve the Cube.
 homepage: https://github.com/unixpickle/cube

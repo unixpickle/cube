@@ -15,18 +15,30 @@ class EOLineHeuristics {
   final List<int> backIndex;
   
   /**
+   * The index data for solving the entire EOLine.
+   */
+  final List<int> fullIndex;
+  
+  /**
    * Create a new EOLine heuristic using heuristic data. Ideally, you would
    * load [frontIndex] from `heuristics/zzfront.bin` and [backIndex] from
    * `heuristics/zzback.bin`.
    */
-  EOLineHeuristics(this.frontIndex, this.backIndex);
+  EOLineHeuristics.frontBack(this.frontIndex, this.backIndex) :
+      fullIndex = null;
+  
+  EOLineHeuristics.full(this.fullIndex) : frontIndex = null, backIndex = null;
   
   /**
    * A lower-bound heuristic for solving the EOLine.
    */
   int moveCount(Edges edges) {
-    return max(frontIndex[hashEOAndEdge(edges, 2, 2)],
-        backIndex[hashEOAndEdge(edges, 2, 8)]);
+    if (frontIndex != null) {
+      return max(frontIndex[hashEOAndEdge(edges, 2, 2)],
+          backIndex[hashEOAndEdge(edges, 2, 8)]);
+    } else {
+      return fullIndex[hashEOLine(edges)];
+    }
   }
   
   /**
@@ -47,6 +59,23 @@ class EOLineHeuristics {
       }
     }
     return res;
+  }
+  
+  /**
+   * Hash the entire EOLine in the standard ZZ color scheme.
+   */
+  static int hashEOLine(Edges edges) {
+    int eoHash = hashEO(edges, 2);
+    int frontPos = -1;
+    int backPos = -1;
+    for (int i = 0; i < 12; ++i) {
+      int edge = edges.readEdge(i, 0);
+      if (edge == 2) frontPos = i;
+      else if (edge == 8) backPos = i;
+    }
+    assert(frontPos >= 0 && backPos >= 0);
+    if (backPos > frontPos) --backPos;
+    return backPos + frontPos * 11 + eoHash * 132;
   }
   
   /**
