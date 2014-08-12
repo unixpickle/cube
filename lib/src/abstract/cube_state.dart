@@ -14,4 +14,9 @@ abstract class CubeState {
    * The edges of the cube.
    */
   Edges get edges;
+  
+  /**
+   * The corners of the cube.
+   */
+  Corners get corners;
 }

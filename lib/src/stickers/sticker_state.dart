@@ -64,6 +64,11 @@ class StickerState extends CubeState {
   Edges get edges => new StickerEdges(this);
   
   /**
+   * This state's corners.
+   */
+  Corners get corners => new StickerCorners(this);
+  
+  /**
    * Create a new solved cube of side length [s].
    */
   StickerState.identity(int s) : size = s, faceCount = s * s,

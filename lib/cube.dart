@@ -11,10 +11,12 @@ part 'src/abstract/cube_state.dart';
 part 'src/abstract/permutation.dart';
 part 'src/abstract/move.dart';
 part 'src/abstract/edges.dart';
+part 'src/abstract/corners.dart';
 
 part 'src/stickers/sticker_state.dart';
 part 'src/stickers/sticker_perm.dart';
 part 'src/stickers/sticker_edges.dart';
+part 'src/stickers/sticker_corners.dart';
 part 'src/stickers/sticker_move.dart';
 part 'src/stickers/sticker_algorithm.dart';
 part 'src/stickers/sticker_eoline_solver.dart';
