@@ -11,6 +11,11 @@ class WcaAlgorithm {
   final List<WcaMove> moves;
   
   /**
+   * Create an algorithm from moves.
+   */
+  WcaAlgorithm.fromMoves(this.moves);
+  
+  /**
    * Parse a WCA algorithm.
    */
   WcaAlgorithm.fromString(String str) : moves = new List<WcaMove>() {

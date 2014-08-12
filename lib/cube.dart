@@ -32,3 +32,4 @@ part 'src/choose_map.dart';
 part 'src/wca_move.dart';
 part 'src/wca_algorithm.dart';
 part 'src/notation_error.dart';
+part 'src/wca_scrambler.dart';

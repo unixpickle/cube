@@ -16,6 +16,11 @@ abstract class WcaMove {
   int get power;
   
   /**
+   * The slice that this turn occurs on.
+   */
+  int get scrambleExclusionId;
+  
+  /**
    * Create a [WcaMove] subclass that corresponds to the given move.
    * 
    * If the move cannot be parsed, a [NotationError] is thrown.
@@ -53,6 +58,8 @@ class WcaTurn implements WcaMove {
    * turns have a width of greater than 1.
    */
   final int width;
+  
+  int get scrambleExclusionId => width;
   
   /**
    * The number of times this move should be applied. This must range from 1 to
@@ -118,6 +125,8 @@ class WcaSlice implements WcaMove {
   final int axis;
   final int power;
   
+  int get scrambleExclusionId => 0;
+  
   WcaSlice(this.axis, this.power);
   
   WcaSlice.fromString(String s) : axis = _parseSliceAxis(s),
@@ -154,6 +163,8 @@ class WcaSlice implements WcaMove {
 class WcaRotation implements WcaMove {
   final int axis;
   final int power;
+  
+  int get scrambleExclusionId => 0;
   
   WcaRotation(this.axis, this.power);
   
